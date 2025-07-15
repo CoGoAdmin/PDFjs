@@ -24,80 +24,20 @@ See https://github.com/adobe-type-tools/cmap-resources
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<!--#if GENERIC || CHROME-->
     <meta name="google" content="notranslate">
-<!--#endif-->
     <title>PDF.js viewer</title>
 
-<!--#if MOZCENTRAL-->
-<!--#include viewer-snippet-firefox-extension.html-->
-<!--#elif CHROME-->
-<!--#include viewer-snippet-chrome-extension.html-->
-<!--#else-->
-<!--#include viewer-snippet.html-->
-<!--#endif-->
+<!-- This snippet is used in production (included from viewer.html) -->
+<link rel="resource" type="application/l10n" href="locale/locale.json">
+<script src="../build/pdf.mjs" type="module"></script>
 
-<!--#if MOZCENTRAL-->
-<!--<link rel="stylesheet" href="resource://pdf.js/web/viewer.css">-->
-<!--<link rel="localization" href="toolkit/pdfviewer/viewer.ftl"/>-->
-<!--#else-->
     <link rel="stylesheet" href="viewer.css">
-<!--#endif-->
 
-<!--#if MOZCENTRAL-->
-<!--<script build="resource://pdf.js/web/viewer.mjs" type="module"></script>-->
-<!--#elif !MOZCENTRAL-->
-<!--<script build="viewer.mjs" type="module"></script>-->
-<!--#elif /* Development mode. */-->
-    <link rel="resource" type="application/l10n" href="locale/locale.json">
-
-    <script type="importmap">
-      {
-        "imports": {
-          "pdfjs/": "../src/",
-          "pdfjs-lib": "../src/pdf.js",
-          "pdfjs-web/": "./",
-
-          "fluent-bundle": "../node_modules/@fluent/bundle/esm/index.js",
-          "fluent-dom": "../node_modules/@fluent/dom/esm/index.js",
-          "cached-iterable": "../node_modules/cached-iterable/src/index.mjs",
-
-          "display-cmap_reader_factory": "../src/display/cmap_reader_factory.js",
-          "display-standard_fontdata_factory": "../src/display/standard_fontdata_factory.js",
-          "display-wasm_factory": "../src/display/wasm_factory.js",
-          "display-fetch_stream": "../src/display/fetch_stream.js",
-          "display-network": "../src/display/network.js",
-          "display-node_stream": "../src/display/stubs.js",
-          "display-node_utils": "../src/display/stubs.js",
-
-          "web-alt_text_manager": "./alt_text_manager.js",
-          "web-annotation_editor_params": "./annotation_editor_params.js",
-          "web-download_manager": "./download_manager.js",
-          "web-external_services": "./genericcom.js",
-          "web-new_alt_text_manager": "./new_alt_text_manager.js",
-          "web-null_l10n": "./genericl10n.js",
-          "web-pdf_attachment_viewer": "./pdf_attachment_viewer.js",
-          "web-pdf_cursor_tools": "./pdf_cursor_tools.js",
-          "web-pdf_document_properties": "./pdf_document_properties.js",
-          "web-pdf_find_bar": "./pdf_find_bar.js",
-          "web-pdf_layer_viewer": "./pdf_layer_viewer.js",
-          "web-pdf_outline_viewer": "./pdf_outline_viewer.js",
-          "web-pdf_presentation_mode": "./pdf_presentation_mode.js",
-          "web-pdf_sidebar": "./pdf_sidebar.js",
-          "web-pdf_thumbnail_viewer": "./pdf_thumbnail_viewer.js",
-          "web-preferences": "./genericcom.js",
-          "web-print_service": "./pdf_print_service.js",
-          "web-secondary_toolbar": "./secondary_toolbar.js",
-          "web-signature_manager": "./signature_manager.js",
-          "web-toolbar": "./toolbar.js"
-        }
-      }
-    </script>
-    <script src="viewer.js" type="module"></script>
-<!--#endif-->
+  <script src="viewer.mjs" type="module"></script>
   </head>
 
   <body tabindex="0">
+    <span id="viewer-alert" class="visuallyHidden" role="alert"></span>
     <div id="outerContainer">
 
       <div id="sidebarContainer">
@@ -353,11 +293,9 @@ See https://github.com/adobe-type-tools/cmap-resources
                   </button>
                   <div id="secondaryToolbar" class="hidden doorHangerRight menu">
                     <div id="secondaryToolbarButtonContainer" class="menuContainer">
-<!--#if GENERIC-->
                       <button id="secondaryOpenFile" class="toolbarButton labeled" type="button" tabindex="0" data-l10n-id="pdfjs-open-file-button">
                         <span data-l10n-id="pdfjs-open-file-button-label"></span>
                       </button>
-<!--#endif-->
 
                       <div class="visibleMediumView">
                         <button id="secondaryPrint" class="toolbarButton labeled" type="button" tabindex="0" data-l10n-id="pdfjs-print-button">
@@ -368,14 +306,9 @@ See https://github.com/adobe-type-tools/cmap-resources
                           <span data-l10n-id="pdfjs-save-button-label"></span>
                         </button>
 
-<!--#if !GENERIC-->
-<!--            <div class="horizontalToolbarSeparator"></div>-->
-<!--#endif-->
                       </div>
 
-<!--#if GENERIC-->
                       <div class="horizontalToolbarSeparator"></div>
-<!--#endif-->
 
                       <button id="presentationMode" class="toolbarButton labeled" type="button" tabindex="0" data-l10n-id="pdfjs-presentation-mode-button">
                         <span data-l10n-id="pdfjs-presentation-mode-button-label"></span>
@@ -725,7 +658,7 @@ See https://github.com/adobe-type-tools/cmap-resources
                   <button id="clearSignatureButton" type="button" data-l10n-id="pdfjs-editor-add-signature-clear-button" tabindex="0"><span data-l10n-id="pdfjs-editor-add-signature-clear-button-label"></span></button>
                 </div>
                 <div id="addSignatureSaveContainer">
-                  <input type="checkbox" id="addSignatureSaveCheckbox" checked="true"></input>
+                  <input type="checkbox" id="addSignatureSaveCheckbox"></input>
                   <label for="addSignatureSaveCheckbox" data-l10n-id="pdfjs-editor-add-signature-save-checkbox"></label>
                   <span></span>
                   <span id="addSignatureSaveWarning" data-l10n-id="pdfjs-editor-add-signature-save-warning-message"></span>
@@ -770,7 +703,6 @@ See https://github.com/adobe-type-tools/cmap-resources
         </div>
       </dialog>
 
-<!--#if !MOZCENTRAL-->
         <dialog id="printServiceDialog" style="min-width: 200px;">
           <div class="row">
             <span data-l10n-id="pdfjs-print-progress-message"></span>
@@ -783,10 +715,6 @@ See https://github.com/adobe-type-tools/cmap-resources
             <button id="printCancel" class="dialogButton" type="button"><span data-l10n-id="pdfjs-print-progress-close-button"></span></button>
           </div>
         </dialog>
-<!--#endif-->
-<!--#if CHROME-->
-<!--#include viewer-snippet-chrome-overlays.html-->
-<!--#endif-->
       </div>  <!-- dialogContainer -->
 
       <div id="editorUndoBar" class="messageBar" role="status" aria-labelledby="editorUndoBarMessage" tabindex="-1" hidden>

@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import fi.iki.elonen.NanoHTTPD
 import java.io.IOException
 import java.io.InputStream
+import android.util.Log
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,7 +19,7 @@ class MainActivity : AppCompatActivity() {
     private var webServer: WebServer? = null
 
     // Define the port for our local HTTP server
-    private val SERVER_PORT = 8080
+    private val SERVER_PORT = 8888
     // Define the host for our local HTTP server
     private val SERVER_HOST = "127.0.0.1"
 
@@ -71,7 +72,7 @@ class MainActivity : AppCompatActivity() {
                 super.onReceivedError(view, errorCode, description, failingUrl)
                 // Handle errors during page loading
                 // For debugging, you might log these errors:
-                // Log.e("WebViewError", "Error: $description, URL: $failingUrl")
+                Log.e("WebViewError", "Error: $description, URL: $failingUrl")
             }
         }
 
@@ -81,7 +82,7 @@ class MainActivity : AppCompatActivity() {
             override fun onConsoleMessage(consoleMessage: android.webkit.ConsoleMessage?): Boolean {
                 consoleMessage?.let {
                     // Log console messages from the WebView to Logcat
-                    // Log.d("WebViewConsole", "${it.message()} -- From line ${it.lineNumber()} of ${it.sourceId()}")
+                    Log.d("WebViewConsole", "${it.message()} -- From line ${it.lineNumber()} of ${it.sourceId()}")
                 }
                 return super.onConsoleMessage(consoleMessage)
             }
@@ -91,7 +92,10 @@ class MainActivity : AppCompatActivity() {
         // The PDF.js viewer.html will be served from our local server,
         // and it will then request the PDF file, also from the local server.
         // The 'file' parameter in viewer.html expects a URL, which our server provides.
-        val pdfUrl = "http://$SERVER_HOST:$SERVER_PORT/pdfjs/web/viewer.html?file=/output.pdf"
+//JMT        val pdfUrl = "http://$SERVER_HOST:$SERVER_PORT/pdfjs/web/viewer.html?file=../test/pdfs/160F-2019.pdf"
+        val filename = "JavaNotesForProfessionals.pdf"
+        val pdfUrl = "http://$SERVER_HOST:$SERVER_PORT/pdfjs/web/viewer.html?file=$filename" +
+                "#page=34"
 
         // Load the URL into the WebView
         webView.loadUrl(pdfUrl)
@@ -165,10 +169,13 @@ class MainActivity : AppCompatActivity() {
         private fun getMimeType(uri: String): String {
             return when {
                 uri.endsWith(".html") -> "text/html"
+                uri.endsWith(".ftl") -> "text/html"
                 uri.endsWith(".css") -> "text/css"
                 uri.endsWith(".js") -> "application/javascript"
+                uri.endsWith(".mjs") -> "application/javascript"
                 uri.endsWith(".pdf") -> "application/pdf"
                 uri.endsWith(".png") -> "image/png"
+                uri.endsWith(".ico") -> "image/png"
                 uri.endsWith(".jpg") || uri.endsWith(".jpeg") -> "image/jpeg"
                 uri.endsWith(".gif") -> "image/gif"
                 uri.endsWith(".svg") -> "image/svg+xml"
@@ -177,6 +184,7 @@ class MainActivity : AppCompatActivity() {
                 uri.endsWith(".woff2") -> "font/woff2"
                 uri.endsWith(".ttf") -> "font/ttf"
                 uri.endsWith(".otf") -> "font/otf"
+                uri.endsWith(".pfb") -> "application/x-font-type1"
                 else -> "application/octet-stream" // Default for unknown types
             }
         }
