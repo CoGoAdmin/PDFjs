@@ -93,9 +93,12 @@ class MainActivity : AppCompatActivity() {
         // and it will then request the PDF file, also from the local server.
         // The 'file' parameter in viewer.html expects a URL, which our server provides.
 //JMT        val pdfUrl = "http://$SERVER_HOST:$SERVER_PORT/pdfjs/web/viewer.html?file=../test/pdfs/160F-2019.pdf"
-        val filename = "JavaNotesForProfessionals.pdf"
-        val pdfUrl = "http://$SERVER_HOST:$SERVER_PORT/pdfjs/web/viewer.html?file=$filename" +
-                "#page=34"
+        val filename =
+            /*"widget_hidden_print.pdf"*/
+            /*"JavaNotesForProfessionals.pdf"*/
+            "compressed.tracemonkey-pldi-09.pdf"
+        val pdfUrl = "http://$SERVER_HOST:$SERVER_PORT/pdfjs/web/viewer.html?file=$filename"
+//JMT               +  "#scaleddecimalforms"
 
         // Load the URL into the WebView
         webView.loadUrl(pdfUrl)
@@ -174,6 +177,7 @@ class MainActivity : AppCompatActivity() {
                 uri.endsWith(".js") -> "application/javascript"
                 uri.endsWith(".mjs") -> "application/javascript"
                 uri.endsWith(".pdf") -> "application/pdf"
+                uri.endsWith(".wasm") -> "application/wasm"
                 uri.endsWith(".png") -> "image/png"
                 uri.endsWith(".ico") -> "image/png"
                 uri.endsWith(".jpg") || uri.endsWith(".jpeg") -> "image/jpeg"
